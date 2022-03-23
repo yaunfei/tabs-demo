@@ -94,12 +94,15 @@ export default defineComponent({
     // 设置页面到指定位置
     const scrolltoCurrContent = () => {
       const target = children[state.currIndex].$el;
+      const el = document.documentElement || document.body;
       if (target) {
+        // 点击时，锁定防止页面滚动影响下划线
         lockScroll = true;
         // 获取当前元素的Y轴位置，到视口顶部距离top + 卷起来的高度 - tabBar的高度
-        const to = useClinetRect(target).top + getScrollTop(window) - tabHeight;
-        scrollTopTo(to, tabHeight, () => {
-          lockScroll = false;
+        const to = useClinetRect(target).top + getScrollTop(el) - tabHeight;
+        // 滚动方法
+        scrollTopTo(to, () => {
+          lockScroll = false; // 滚动到指定位置时，解锁
         });
       }
     };

@@ -71,25 +71,28 @@ const useChildren = (key: string) => {
 
 // 获取scrollTop
 const getScrollTop = (el: any): number => {
-  const top = "scrollTop" in el ? el.scrollTop : el.pageYOffset;
+  const top = "scrollTop" in el ? el.scrollTop : el.scrollY;
   return Math.max(top, 0);
 };
 
-// // 滚动到指定位置
-const scrollTopTo = (to: number, tabHeight: any, callback: () => void) => {
-
+// 滚动到指定位置
+const scrollTopTo = (to: number, callback: () => void) => {
+  
   window.scrollTo({
     top: to,
-    behavior: 'smooth',
+    behavior: "smooth",
   });
 
   // 滚动到指定位置，调用回掉函数
-  window.onscroll= () => {
-    const target = window.pageYOffset;
-    if (to === target) {
+  window.onscroll = () => {
+    
+    const el = document.documentElement || document.body;
+
+    // 滑动到指定位置 或 元素滚动是否到底：元素全部内容高度 - 滚动上去的高度 = 可视区域高度
+    if (to === el.scrollTop || el.scrollHeight - el.scrollTop === el.clientHeight) {
       callback();
     }
-  }
+  };
 };
 
 export {
